@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Buon Compleanno Mamma! 🎂</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --pink:    #ff6fa8;
+      --rose:    #ff3f7f;
+      --peach:   #ffb3c6;
+      --gold:    #ffd166;
+      --cream:   #fff5f8;
+      --purple:  #c56ef5;
+    }
+
+    html, body {
+      width: 100%; min-height: 100%;
+      overflow-x: hidden;
+    }
+
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(160deg, #ffe0ec 0%, #ffc8dd 40%, #ffafcc 100%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 0 0 60px;
+      position: relative;
+    }
+
+    /* ── Canvas behind everything ── */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* ── All content sits above canvas ── */
+    .page-content {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    /* ══════════════════════════════════
+       HEADER
+    ══════════════════════════════════ */
+    header {
+      width: 100%;
+      text-align: center;
+      padding: clamp(28px, 6vw, 72px) 20px clamp(16px, 3vw, 36px);
+    }
+
+    .subtitle-pre {
+      font-family: 'Nunito', sans-serif;
+      font-size: clamp(0.9rem, 2.5vw, 1.3rem);
+      color: var(--rose);
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      font-weight: 700;
+      animation: fadeSlideDown 1s ease both;
+    }
+
+    h1 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(3rem, 11vw, 9rem);
+      line-height: 1.1;
+      background: linear-gradient(135deg, #d4006c, #ff6fa8, #ffd166, #ff3f7f);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      filter: drop-shadow(0 2px 12px rgba(213,0,108,.25));
+      animation: fadeSlideDown 1s .15s ease both;
+      text-shadow: none;
+    }
+
+    .star-row {
+      display: flex;
+      justify-content: center;
+      gap: clamp(8px, 2vw, 20px);
+      margin-top: 18px;
+      font-size: clamp(1.2rem, 3.5vw, 2rem);
+      animation: fadeSlideDown 1s .3s ease both;
+    }
+
+    /* ══════════════════════════════════
+       PHOTO PLACEHOLDER
+    ══════════════════════════════════ */
+    .photo-wrapper {
+      margin: clamp(18px, 4vw, 48px) auto 0;
+      width: clamp(200px, 52vw, 380px);
+      aspect-ratio: 1 / 1;
+      border-radius: 50%;
+      border: 6px solid white;
+      box-shadow:
+        0 0 0 10px rgba(255,111,168,.35),
+        0 0 0 20px rgba(255,111,168,.15),
+        0 20px 60px rgba(213,0,108,.25);
+      overflow: hidden;
+      animation: popIn 1s .5s cubic-bezier(.34,1.56,.64,1) both;
+      position: relative;
+      background: #ffe6f0;
+    }
+
+    /* ── Replace this <img> src with your photo path ── */
+    .photo-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Placeholder shown when no real photo is present */
+    .photo-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      color: var(--rose);
+      text-align: center;
+      padding: 20px;
+    }
+    .photo-placeholder .ph-icon { font-size: clamp(3rem, 12vw, 5rem); }
+    .photo-placeholder .ph-text {
+      font-size: clamp(0.75rem, 3vw, 1rem);
+      font-weight: 700;
+      color: #c05080;
+      line-height: 1.4;
+    }
+
+    /* ══════════════════════════════════
+       MESSAGE CARD
+    ══════════════════════════════════ */
+    .card {
+      margin: clamp(28px, 5vw, 56px) auto 0;
+      width: min(680px, 90vw);
+      background: rgba(255,255,255,.72);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-radius: 32px;
+      padding: clamp(28px, 5vw, 56px) clamp(24px, 5vw, 56px);
+      box-shadow: 0 8px 48px rgba(213,0,108,.12), 0 2px 8px rgba(0,0,0,.06);
+      text-align: center;
+      animation: fadeSlideUp 1s .7s ease both;
+    }
+
+    .card-emoji { font-size: clamp(2rem, 6vw, 3.5rem); display: block; margin-bottom: 14px; }
+
+    .card h2 {
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(1.9rem, 5.5vw, 3.4rem);
+      color: var(--rose);
+      margin-bottom: 18px;
+      line-height: 1.2;
+    }
+
+    .card p {
+      font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+      color: #6d3050;
+      line-height: 1.85;
+      font-weight: 600;
+    }
+
+    .card .signature {
+      margin-top: 26px;
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(1.6rem, 4.5vw, 2.6rem);
+      color: var(--purple);
+    }
+
+    /* ══════════════════════════════════
+       BOTTOM CONFETTI BURST (CSS only)
+    ══════════════════════════════════ */
+    .confetti-row {
+      margin-top: clamp(20px, 4vw, 40px);
+      font-size: clamp(1.4rem, 4vw, 2.2rem);
+      letter-spacing: .5em;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+
+    /* ══════════════════════════════════
+       KEYFRAMES
+    ══════════════════════════════════ */
+    @keyframes fadeSlideDown {
+      from { opacity: 0; transform: translateY(-30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeSlideUp {
+      from { opacity: 0; transform: translateY(30px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes popIn {
+      from { opacity: 0; transform: scale(.6); }
+      to   { opacity: 1; transform: scale(1); }
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50%       { transform: scale(1.12); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Animated background canvas -->
+  <canvas id="bg-canvas"></canvas>
+
+  <div class="page-content">
+
+    <!-- ── HEADER ── -->
+    <header>
+      <p class="subtitle-pre">✨ Con tutto il nostro amore ✨</p>
+      <h1>Buon Compleanno<br>Mamma!</h1>
+      <div class="star-row">🎂 🌸 🎉 💐 🎈 🌟 🎁</div>
+    </header>
+
+    <!-- ── PHOTO ──
+         HOW TO ADD YOUR PHOTO:
+         1. Save your image as  "mamma.jpg"  in the same folder as this file.
+         2. Delete the <div class="photo-placeholder">…</div> block below.
+         3. Uncomment the <img> tag below it.
+         That's it! ✔
+    -->
+    <div class="photo-wrapper">
+
+      <!-- PLACEHOLDER – delete this div when you add your photo -->
+      <div class="photo-placeholder">
+        <span class="ph-icon">📷</span>
+        <span class="ph-text">Add your photo here!<br>(see instructions below)</span>
+      </div>
+
+      <!-- YOUR PHOTO – uncomment this line and delete the placeholder above -->
+      <!-- <img src="mamma.jpg" alt="La mia bellissima mamma" /> -->
+
+    </div>
+
+    <!-- ── MESSAGE CARD ── -->
+    <div class="card">
+      <span class="card-emoji">💖</span>
+      <h2>Per la mamma più speciale del mondo</h2>
+      <p>
+        Cara Mamma,<br>
+        Grazie di cuore per tutto quello che fai per noi.
+        Ti vogliamo tantissimo bene e speriamo che tu abbia
+        un compleanno fantastico… Te lo meriti davvero! 🎉❤️
+      </p>
+    </div>
+
+    <!-- ── BOTTOM EMOJI ROW ── -->
+    <div class="confetti-row">🎊🎈🎂🎈🎊</div>
+
+  </div><!-- end .page-content -->
+
+
+  <!-- ══════════════════════════════════
+       CANVAS ANIMATION  –  hearts & balloons
+  ══════════════════════════════════ -->
+  <script>
+    const canvas = document.getElementById('bg-canvas');
+    const ctx    = canvas.getContext('2d');
+
+    // ── Resize ──────────────────────────────────────────
+    function resize() {
+      canvas.width  = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    // ── Helpers ─────────────────────────────────────────
+    const rand  = (min, max) => Math.random() * (max - min) + min;
+    const randI = (min, max) => Math.floor(rand(min, max));
+
+    // ── Draw a heart centred at (x,y) with given size & alpha ──
+    function drawHeart(x, y, size, alpha, color) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+      ctx.fillStyle   = color;
+      ctx.beginPath();
+      ctx.moveTo(x, y);
+      ctx.bezierCurveTo(x, y - size * 0.3, x - size * 0.6, y - size * 0.8, x - size * 0.6, y - size * 1.1);
+      ctx.bezierCurveTo(x - size * 0.6, y - size * 1.6, x, y - size * 1.5, x, y - size * 1.1);
+      ctx.bezierCurveTo(x, y - size * 1.5, x + size * 0.6, y - size * 1.6, x + size * 0.6, y - size * 1.1);
+      ctx.bezierCurveTo(x + size * 0.6, y - size * 0.8, x, y - size * 0.3, x, y);
+      ctx.closePath();
+      ctx.fill();
+      ctx.restore();
+    }
+
+    // ── Draw a balloon centred at (x,y) ──
+    function drawBalloon(x, y, rx, ry, alpha, color) {
+      ctx.save();
+      ctx.globalAlpha = alpha;
+
+      // body
+      ctx.beginPath();
+      ctx.ellipse(x, y, rx, ry, 0, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      // shine
+      ctx.beginPath();
+      ctx.ellipse(x - rx * 0.28, y - ry * 0.32, rx * 0.22, ry * 0.18, -0.4, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(255,255,255,0.45)';
+      ctx.fill();
+
+      // knot
+      ctx.beginPath();
+      ctx.arc(x, y + ry, rx * 0.14, 0, Math.PI * 2);
+      ctx.fillStyle = color;
+      ctx.fill();
+
+      // string
+      ctx.beginPath();
+      ctx.moveTo(x, y + ry + rx * 0.14);
+      const stringLen = ry * 1.6;
+      ctx.quadraticCurveTo(x + rx * 0.3, y + ry + stringLen * 0.5, x, y + ry + stringLen);
+      ctx.strokeStyle = 'rgba(0,0,0,0.18)';
+      ctx.lineWidth   = 1.2;
+      ctx.stroke();
+
+      ctx.restore();
+    }
+
+    // ── Particle pool ────────────────────────────────────
+    const HEART_COLORS   = ['#ff6fa8','#ff3f7f','#ff85b3','#ffd166','#f72585','#c056ef'];
+    const BALLOON_COLORS = ['#ff6fa8','#ffd166','#70d6ff','#c056ef','#ff9f1c','#06d6a0','#ff3f7f'];
+
+    const TOTAL_HEARTS   = 38;
+    const TOTAL_BALLOONS = 18;
+
+    const particles = [];
+
+    // Hearts – pulsing, slow drift
+    for (let i = 0; i < TOTAL_HEARTS; i++) {
+      particles.push({
+        type:  'heart',
+        x:     rand(0, 1),          // stored as 0‥1 fraction of canvas width
+        y:     rand(0, 1),
+        size:  rand(8, 26),
+        vx:    rand(-0.08, 0.08),   // speed as fraction of canvas per second
+        vy:    rand(-0.06, 0.02),
+        alpha: rand(0.25, 0.55),
+        pulseOffset: rand(0, Math.PI * 2),
+        pulseSpeed:  rand(0.8, 2.2),
+        color: HEART_COLORS[randI(0, HEART_COLORS.length)],
+      });
+    }
+
+    // Balloons – float upward, gentle sway
+    for (let i = 0; i < TOTAL_BALLOONS; i++) {
+      const rx = rand(18, 38);
+      particles.push({
+        type:      'balloon',
+        x:         rand(0, 1),
+        y:         rand(-0.2, 1.1),  // start anywhere incl. above screen
+        rx,
+        ry:        rx * rand(1.1, 1.35),
+        swayPhase: rand(0, Math.PI * 2),
+        swaySpeed: rand(0.5, 1.3),
+        swayAmt:   rand(0.008, 0.022),
+        speed:     rand(0.012, 0.028),  // upward speed as fraction / 60fps tick
+        alpha:     rand(0.5, 0.85),
+        color:     BALLOON_COLORS[randI(0, BALLOON_COLORS.length)],
+      });
+    }
+
+    // ── Animation loop ───────────────────────────────────
+    let last = 0;
+    function loop(ts) {
+      const dt = Math.min((ts - last) / 1000, 0.1); // seconds, capped
+      last = ts;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const W = canvas.width;
+      const H = canvas.height;
+
+      for (const p of particles) {
+        if (p.type === 'heart') {
+          // drift
+          p.x += p.vx * dt;
+          p.y += p.vy * dt;
+
+          // wrap around edges
+          if (p.x < -0.08) p.x = 1.08;
+          if (p.x >  1.08) p.x = -0.08;
+          if (p.y < -0.12) p.y = 1.08;
+          if (p.y >  1.08) p.y = -0.12;
+
+          // pulse
+          const pulse = 1 + 0.18 * Math.sin(ts / 1000 * p.pulseSpeed + p.pulseOffset);
+
+          drawHeart(p.x * W, p.y * H, p.size * pulse, p.alpha, p.color);
+
+        } else { // balloon
+          p.y -= p.speed * dt;
+          if (p.y < -0.25) {
+            p.y  = 1.15;
+            p.x  = rand(0, 1);
+          }
+          const swayX = p.x + Math.sin(ts / 1000 * p.swaySpeed + p.swayPhase) * p.swayAmt;
+
+          drawBalloon(swayX * W, p.y * H, p.rx, p.ry, p.alpha, p.color);
+        }
+      }
+
+      requestAnimationFrame(loop);
+    }
+    requestAnimationFrame(loop);
+  </script>
+
+</body>
+</html>
